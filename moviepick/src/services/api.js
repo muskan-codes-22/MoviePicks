@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_KEY = "4f37172730c513220c97f8426a01ecab";
+const API_KEY = import.meta.env.VITE_API_KEY;
 
 export const searchMovies = (query) => {
   return axios.get(
