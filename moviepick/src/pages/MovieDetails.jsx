@@ -6,38 +6,108 @@ function MovieDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [movie, setMovie] = useState(null);
+  const [darkMode] = useState(true);
 
   useEffect(() => {
     getMovieDetails(id).then((res) => setMovie(res.data));
   }, [id]);
 
   if (!movie) return (
-    <div className="details-page dark">
+    <div className={`details-page ${darkMode ? "dark" : "light"}`}>
       <div className="empty-state">
         <div className="empty-icon">⏳</div>
-        <p className="empty-title">Loading...</p>
+        <p className="empty-title">Loading movie details...</p>
       </div>
     </div>
   );
 
+  const genres = movie.genres?.map((g) => g.name) || [];
+  const runtime = movie.runtime
+    ? `${Math.floor(movie.runtime / 60)}h ${movie.runtime % 60}m`
+    : null;
+  const year = movie.release_date ? movie.release_date.slice(0, 4) : null;
+
   return (
-    <div className="details-page dark">
-      {movie.backdrop_path && (
-        <div className="details-backdrop">
-          <img src={`https://image.tmdb.org/t/p/w1280${movie.backdrop_path}`} alt="" />
-        </div>
-      )}
+    <div className={`details-page ${darkMode ? "dark" : "light"}`}>
 
-      <button className="btn-back" onClick={() => navigate(-1)}>← Back</button>
+      {/* Back button */}
+      <div className="details-topbar">
+        <button className="btn-back" onClick={() => navigate(-1)}>
+          ← Back to results
+        </button>
+      </div>
 
+      {/* Two-column layout */}
       <div className="details-body">
-        <div className="details-poster">
-          <img src={`https://image.tmdb.org/t/p/w400${movie.poster_path}`} alt={movie.title} />
+
+        {/* LEFT — Poster */}
+        <div className="details-left">
+          <div className="details-poster">
+            {movie.poster_path ? (
+              <img
+                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                alt={movie.title}
+              />
+            ) : (
+              <div className="details-poster-placeholder">🎬</div>
+            )}
+          </div>
+
+          {/* Quick facts below poster */}
+          <div className="details-facts">
+            {movie.vote_average > 0 && (
+              <div className="fact-item">
+                <span className="fact-label">Rating</span>
+                <span className="fact-value rating-gold">★ {movie.vote_average.toFixed(1)} / 10</span>
+              </div>
+            )}
+            {year && (
+              <div className="fact-item">
+                <span className="fact-label">Year</span>
+                <span className="fact-value">{year}</span>
+              </div>
+            )}
+            {runtime && (
+              <div className="fact-item">
+                <span className="fact-label">Runtime</span>
+                <span className="fact-value">{runtime}</span>
+              </div>
+            )}
+            {movie.original_language && (
+              <div className="fact-item">
+                <span className="fact-label">Language</span>
+                <span className="fact-value">{movie.original_language.toUpperCase()}</span>
+              </div>
+            )}
+          </div>
         </div>
-        <div className="details-meta">
-          <h1>{movie.title}</h1>
-          <div className="details-rating">★ {movie.vote_average?.toFixed(1)} / 10</div>
-          <p className="details-overview">{movie.overview}</p>
+
+        {/* RIGHT — Info */}
+        <div className="details-right">
+          <h1 className="details-title">{movie.title}</h1>
+
+          {movie.tagline && (
+            <p className="details-tagline">"{movie.tagline}"</p>
+          )}
+
+          {genres.length > 0 && (
+            <div className="details-genres">
+              {genres.map((g) => (
+                <span key={g} className="genre-pill">{g}</span>
+              ))}
+            </div>
+          )}
+
+          <div className="details-divider" />
+
+          <h2 className="details-section-title">Overview</h2>
+          <p className="details-overview">
+            {movie.overview || "No overview available for this title."}
+          </p>
+
+          {movie.vote_count > 0 && (
+            <p className="details-votes">{movie.vote_count.toLocaleString()} votes</p>
+          )}
         </div>
       </div>
     </div>

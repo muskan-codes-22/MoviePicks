@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
- 
+
 function MovieCard({ movie }) {
   const rating = movie.vote_average;
   const hasRating = rating && rating > 0;
- 
+
   return (
     <Link to={`/movie/${movie.id}`}>
       <div className="movie-card">
@@ -18,7 +18,7 @@ function MovieCard({ movie }) {
             <div style={{
               width: "100%", height: "100%", background: "var(--surface-2)",
               display: "flex", alignItems: "center", justifyContent: "center",
-              color: "var(--text-lo)", fontSize: "32px"
+              color: "var(--text-lo)", fontSize: "40px"
             }}>🎬</div>
           )}
           <div className={`card-rating ${!hasRating ? "no-rating" : ""}`}>
@@ -35,5 +35,5 @@ function MovieCard({ movie }) {
     </Link>
   );
 }
- 
+
 export default MovieCard;
