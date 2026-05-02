@@ -3,106 +3,167 @@ import { useDispatch, useSelector } from "react-redux";
 import { setMovies } from "../redux/movieSlice";
 import { searchMovies } from "../services/api";
 import MovieCard from "../components/MovieCard";
-
+ 
 function Home() {
   const [query, setQuery] = useState("");
   const dispatch = useDispatch();
-
-  // Redux data
   const movies = useSelector((state) => state.movies.list);
-
-  // Local state for UI features
   const [filteredMovies, setFilteredMovies] = useState([]);
-  const [darkMode, setDarkMode] = useState(false);
-
-  // SEARCH FUNCTION
+  const [darkMode, setDarkMode] = useState(true);
+  const [activeSort, setActiveSort] = useState(null);
+  const [activeNav, setActiveNav] = useState("discover");
+ 
   const handleSearch = async () => {
-    if (!query) return;
+    if (!query.trim()) return;
     const res = await searchMovies(query);
     dispatch(setMovies(res.data.results));
+    setActiveSort(null);
   };
-
-  // Sync Redux → Local state
+ 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") handleSearch();
+  };
+ 
   useEffect(() => {
     setFilteredMovies(movies);
   }, [movies]);
-
-  // SORT FUNCTION
+ 
   const handleSort = (type) => {
     let sorted = [...filteredMovies];
-
-    if (type === "rating") {
-      sorted.sort((a, b) => b.vote_average - a.vote_average);
-    }
-
-    if (type === "title") {
-      sorted.sort((a, b) => a.title.localeCompare(b.title));
-    }
-
+    if (type === "rating") sorted.sort((a, b) => b.vote_average - a.vote_average);
+    if (type === "title") sorted.sort((a, b) => a.title.localeCompare(b.title));
     setFilteredMovies(sorted);
+    setActiveSort(type);
   };
-
-  // FILTER FUNCTION
+ 
   const handleFilter = (rating) => {
-    const filtered = movies.filter((m) => m.vote_average >= rating);
-    setFilteredMovies(filtered);
+    setFilteredMovies(movies.filter((m) => m.vote_average >= rating));
+    setActiveSort("filter7");
   };
-
+ 
+  const handleReset = () => {
+    setFilteredMovies(movies);
+    setActiveSort(null);
+  };
+ 
+  const navItems = [
+    { id: "discover", icon: "🎬", label: "Discover" },
+    { id: "trending", icon: "🔥", label: "Trending" },
+    { id: "watchlist", icon: "🔖", label: "Watchlist" },
+    { id: "favorites", icon: "❤️", label: "Favorites" },
+    { id: "settings", icon: "⚙️", label: "Settings" },
+  ];
+ 
   return (
-    <div className={darkMode ? "dark" : ""} style={{ padding: "20px" }}>
-      
-      {/* SEARCH */}
-      <div style={{ marginBottom: "20px" }}>
-        <input
-          type="text"
-          placeholder="Search movies..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
-        <button onClick={handleSearch}>Search</button>
-      </div>
-
-      {/* CONTROLS */}
-      <div style={{ marginBottom: "20px" }}>
-        <button onClick={() => handleSort("rating")}>
-          Sort by Rating
-        </button>
-
-        <button onClick={() => handleSort("title")}>
-          Sort by Title
-        </button>
-
-        <button onClick={() => handleFilter(7)}>
-          Rating ≥ 7
-        </button>
-
-        <button onClick={() => setFilteredMovies(movies)}>
-          Reset
-        </button>
-
-        <button onClick={() => setDarkMode(!darkMode)}>
-          Toggle Dark Mode
-        </button>
-      </div>
-
-      {/* MOVIE LIST */}
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "15px",
-        }}
-      >
-        {filteredMovies.length > 0 ? (
-          filteredMovies.map((movie) => (
-            <MovieCard key={movie.id} movie={movie} />
-          ))
-        ) : (
-          <p>No movies found</p>
-        )}
+    <div className={`layout ${darkMode ? "dark" : "light"}`}>
+ 
+      {/* SIDEBAR */}
+      <aside className="sidebar">
+        <div className="sidebar-logo">
+          <span className="logo-icon">🎥</span>
+          <span className="logo-text">Movie<b>Picks</b></span>
+        </div>
+ 
+        <p className="sidebar-section-label">MENU</p>
+        <nav className="sidebar-nav">
+          {navItems.map((item) => (
+            <button
+              key={item.id}
+              className={`nav-item ${activeNav === item.id ? "nav-item--active" : ""}`}
+              onClick={() => setActiveNav(item.id)}
+            >
+              <span className="nav-icon">{item.icon}</span>
+              <span className="nav-label">{item.label}</span>
+            </button>
+          ))}
+        </nav>
+ 
+        <div className="sidebar-footer">
+          <button
+            className={`dark-toggle ${darkMode ? "dark-toggle--on" : ""}`}
+            onClick={() => setDarkMode(!darkMode)}
+          >
+            <span className="toggle-track">
+              <span className="toggle-thumb" />
+            </span>
+            <span>{darkMode ? "Dark Mode" : "Light Mode"}</span>
+          </button>
+        </div>
+      </aside>
+ 
+      {/* MAIN PANEL */}
+      <div className="main-panel">
+ 
+        {/* Top bar */}
+        <header className="topbar">
+          <div>
+            <h1 className="topbar-title">Discover Movies</h1>
+            <p className="topbar-sub">Search and explore millions of titles</p>
+          </div>
+          <div className="topbar-avatar">M</div>
+        </header>
+ 
+        {/* Search */}
+        <div className="search-section">
+          <div className="search-bar">
+            <span className="search-icon">🔍</span>
+            <input
+              type="text"
+              placeholder="Search for a movie..."
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={handleKeyDown}
+            />
+            <button className="btn-search" onClick={handleSearch}>Search</button>
+          </div>
+        </div>
+ 
+        {/* Filter / Sort chips */}
+        <div className="filter-bar">
+          <span className="filter-label">Sort & Filter</span>
+          <button
+            className={`chip ${activeSort === "rating" ? "chip--active" : ""}`}
+            onClick={() => handleSort("rating")}
+          >
+            ↓ Top Rated
+          </button>
+          <button
+            className={`chip ${activeSort === "title" ? "chip--active" : ""}`}
+            onClick={() => handleSort("title")}
+          >
+            A–Z Title
+          </button>
+          <button
+            className={`chip ${activeSort === "filter7" ? "chip--active" : ""}`}
+            onClick={() => handleFilter(7)}
+          >
+            ★ Rating ≥ 7
+          </button>
+          <button className="chip chip--reset" onClick={handleReset}>
+            ✕ Reset
+          </button>
+          {filteredMovies.length > 0 && (
+            <span className="results-count">{filteredMovies.length} results</span>
+          )}
+        </div>
+ 
+        {/* Grid */}
+        <div className="movie-grid">
+          {filteredMovies.length > 0 ? (
+            filteredMovies.map((movie) => (
+              <MovieCard key={movie.id} movie={movie} />
+            ))
+          ) : (
+            <div className="empty-state">
+              <div className="empty-icon">🎬</div>
+              <p className="empty-title">Search for a movie to get started</p>
+              <p className="empty-sub">Try "Inception", "Dhurandhar", or your favourite title</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
 }
-
+ 
 export default Home;
