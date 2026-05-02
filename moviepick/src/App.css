@@ -1,5 +1,3 @@
-/* App.css */
-
 * {
   margin: 0;
   padding: 0;
@@ -7,14 +5,13 @@
   font-family: Arial, sans-serif;
 }
 
-/* ── LAYOUT ── */
 .layout {
   display: flex;
   min-height: 100vh;
 }
 
 .dark {
-  background-color: #1a1a2e;
+  background-color: #0c0c15;
   color: #eee;
 }
 
@@ -23,9 +20,8 @@
   color: #222;
 }
 
-/* ── SIDEBAR ── */
 .sidebar {
-  width: 340px;
+  width: 380px;
   min-width: 240px;
   background-color: #16213e;
   color: #eee;
@@ -172,7 +168,6 @@
   border-radius: 10px;
 }
 
-
 .sidebar-footer {
   margin-top: auto;
   padding-top: 16px;
@@ -225,7 +220,6 @@
   transform: translateX(14px);
 }
 
-
 .main-panel {
   flex: 1;
   display: flex;
@@ -245,12 +239,12 @@
 }
 
 .topbar-title {
-  font-size: 24px;
+  font-size: 30px;
   font-weight: bold;
 }
 
 .topbar-sub {
-  font-size: 16px;
+  font-size: 19px;
   color: #888;
   margin-top: 2px;
 }
@@ -299,7 +293,7 @@
   border: none;
   outline: none;
   background: transparent;
-  font-size: 15px;
+  font-size: 18px;
   color: inherit;
 }
 
@@ -333,7 +327,7 @@
 }
 
 .filter-label {
-  font-size: 18px;
+  font-size: 20px;
   color: #888;
   margin-right: 4px;
 }
@@ -344,7 +338,7 @@
   border: 1px solid #ccc;
   background: transparent;
   color: #666;
-  font-size: 13px;
+  font-size: 16px;
   cursor: pointer;
 }
 
@@ -382,10 +376,9 @@
   color: #888;
 }
 
-
 .movie-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 20px;
   padding: 24px 30px 40px;
 }
@@ -397,7 +390,9 @@
   background: #fff;
   border: 1px solid #ddd;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 .dark .movie-card {
@@ -407,7 +402,7 @@
 
 .movie-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
 .card-poster-wrap {
@@ -432,7 +427,7 @@
   position: absolute;
   top: 8px;
   right: 8px;
-  background: rgba(0,0,0,0.75);
+  background: rgba(0, 0, 0, 0.75);
   color: #f5c518;
   font-size: 12px;
   font-weight: bold;
@@ -449,7 +444,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: linear-gradient(transparent, rgba(0,0,0,0.8));
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
   color: #f5c518;
   font-size: 12px;
   font-weight: bold;
@@ -608,8 +603,8 @@
 }
 
 .genre-pill {
-  background: rgba(245,197,24,0.15);
-  border: 1px solid rgba(245,197,24,0.4);
+  background: rgba(245, 197, 24, 0.15);
+  border: 1px solid rgba(245, 197, 24, 0.4);
   color: #f5c518;
   padding: 4px 12px;
   border-radius: 20px;
@@ -645,8 +640,25 @@
 
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
-  .sidebar { display: none; }
-  .details-body { flex-direction: column; }
-  .details-poster { width: 100%; min-width: unset; }
-  .movie-grid { padding: 16px; }
+  .sidebar {
+    display: none;
+  }
+  .details-body {
+    flex-direction: column;
+  }
+  .details-poster {
+    width: 100%;
+    min-width: unset;
+  }
+  .movie-grid {
+    padding: 16px;
+  }
+}
+
+.card-title {
+  color: #eee;
+}
+
+.card-title:visited {
+  color: #eee;
 }
