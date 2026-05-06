@@ -68,7 +68,7 @@ npm run dev
 
 ## 🌐 Live Demo
 
-https://moviepicks-iota.vercel.app/
+[https://moviepicks-iota.vercel.app/(https://moviepicks-pied.vercel.app/)
 
 ---
 
